@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>VTHM STREET - Admin</title>
+  <link href="logo.png" rel="shortcut icon" type="image/x-icon" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{--accent:#c9a84c;--darker:#060606;--light:#f5f0eb;--mid:#888;--danger:#e06060}
+    body{background:var(--darker);color:var(--light);font-family:'Montserrat',sans-serif;min-height:100vh}
+    nav{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 2.5rem;border-bottom:1px solid rgba(255,255,255,.07);background:rgba(6,6,6,.97);backdrop-filter:blur(12px);position:sticky;top:0;z-index:200;gap:1rem}
+    .nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.3rem;letter-spacing:.3em;text-transform:uppercase;color:var(--light);text-decoration:none;white-space:nowrap}
+    .nav-logo span{color:var(--accent)}
+    .nav-badge{font-size:.5rem;letter-spacing:.2em;background:rgba(201,168,76,.15);color:var(--accent);border:1px solid rgba(201,168,76,.3);padding:.28rem .7rem;text-transform:uppercase;margin-left:.6rem}
+    .nav-links{display:flex;gap:1.5rem}.nav-links a{font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);text-decoration:none;transition:color .3s}.nav-links a:hover{color:var(--accent)}
+    .admin-layout{display:grid;grid-template-columns:320px 1fr;min-height:calc(100vh - 58px)}
+    .sidebar{background:#0a0a0a;border-right:1px solid rgba(255,255,255,.07);padding:2rem 1.5rem;position:sticky;top:58px;height:calc(100vh - 58px);overflow-y:auto}
+    .sidebar h2{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;margin-bottom:.3rem}.sidebar h2 em{font-style:italic;color:var(--accent)}
+    .sidebar-sub{font-size:.52rem;letter-spacing:.2em;color:var(--mid);text-transform:uppercase;margin-bottom:2rem;word-break:break-all}
+    .form-group{margin-bottom:1rem}
+    label{display:block;font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);margin-bottom:.45rem}
+    input,select,textarea{width:100%;background:#141414;border:1px solid rgba(255,255,255,.1);color:var(--light);padding:.75rem .9rem;font-family:'Montserrat',sans-serif;font-size:.75rem;transition:border-color .3s;outline:none;resize:vertical}
+    input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+    input::placeholder,textarea::placeholder{color:rgba(255,255,255,.2)}
+    select option{background:#1a1a1a}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+    .save-btn{display:block;width:100%;margin-top:1.4rem;padding:.85rem;font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;background:var(--accent);color:#000;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:600;transition:opacity .3s}
+    .save-btn:hover:not(:disabled){opacity:.85}.save-btn:disabled{opacity:.5;cursor:not-allowed}
+    .cancel-btn{display:block;width:100%;margin-top:.6rem;padding:.75rem;font-size:.55rem;letter-spacing:.22em;text-transform:uppercase;background:transparent;color:var(--mid);border:1px solid rgba(255,255,255,.1);cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .3s}
+    .cancel-btn:hover{border-color:var(--mid);color:var(--light)}
+    .img-preview{width:100%;aspect-ratio:3/4;object-fit:cover;background:#141414;display:block;margin-top:.5rem;border:1px solid rgba(255,255,255,.07)}
+    .img-placeholder{width:100%;aspect-ratio:3/4;background:#141414;border:1px dashed rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.2);font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;margin-top:.5rem}
+    .main-content{padding:2rem}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2.5rem}
+    .stat-card{background:#0f0f0f;border:1px solid rgba(255,255,255,.07);padding:1.2rem 1.4rem}
+    .stat-val{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--accent);font-weight:300}
+    .stat-label{font-size:.5rem;letter-spacing:.22em;text-transform:uppercase;color:var(--mid);margin-top:.3rem}
+    .toolbar{display:flex;gap:.8rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center}
+    .toolbar-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;flex:1}.toolbar-title em{font-style:italic;color:var(--accent)}
+    .search-input{background:#141414;border:1px solid rgba(255,255,255,.1);color:var(--light);padding:.55rem 1rem;font-family:'Montserrat',sans-serif;font-size:.65rem;outline:none;width:220px;transition:border-color .3s}
+    .search-input:focus{border-color:var(--accent)}.search-input::placeholder{color:rgba(255,255,255,.25)}
+    .filter-select{background:#141414;border:1px solid rgba(255,255,255,.1);color:var(--mid);padding:.55rem .9rem;font-family:'Montserrat',sans-serif;font-size:.6rem;outline:none;cursor:pointer}
+    .table-wrap{overflow-x:auto}
+    table{width:100%;border-collapse:collapse}
+    thead tr{border-bottom:1px solid rgba(255,255,255,.1)}
+    th{font-size:.5rem;letter-spacing:.22em;text-transform:uppercase;color:var(--mid);padding:.7rem .9rem;text-align:left;font-weight:400;white-space:nowrap}
+    tbody tr{border-bottom:1px solid rgba(255,255,255,.05);transition:background .2s}
+    tbody tr:hover{background:rgba(255,255,255,.03)}
+    td{padding:.75rem .9rem;font-size:.65rem;vertical-align:middle}
+    .td-img{width:44px;height:55px;object-fit:cover}
+    .td-name{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-weight:300;max-width:200px}
+    .td-price{color:var(--accent);letter-spacing:.12em}
+    .td-badge{display:inline-block;font-size:.45rem;letter-spacing:.18em;padding:.2rem .5rem;text-transform:uppercase}
+    .badge-homme{background:rgba(100,140,201,.15);color:#8ab0e8;border:1px solid rgba(100,140,201,.2)}
+    .badge-femme{background:rgba(176,138,138,.15);color:#c8a0a0;border:1px solid rgba(176,138,138,.2)}
+    .badge-tag{background:rgba(201,168,76,.15);color:var(--accent);border:1px solid rgba(201,168,76,.2)}
+    .action-btns{display:flex;gap:.5rem}
+    .edit-btn,.del-btn{font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;padding:.35rem .8rem;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .3s}
+    .edit-btn{background:rgba(255,255,255,.08);color:var(--light)}.edit-btn:hover{background:var(--accent);color:#000}
+    .del-btn{background:rgba(224,96,96,.1);color:var(--danger)}.del-btn:hover{background:var(--danger);color:#fff}
+    .denied{display:flex;flex-direction:column;align-items:center;justify-content:center;height:70vh;text-align:center;gap:1rem}
+    .denied h2{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300}
+    .denied p{font-size:.6rem;letter-spacing:.2em;color:var(--mid);text-transform:uppercase}
+    .denied a{font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(201,168,76,.3);padding-bottom:2px}
+    .loading-row td{text-align:center;padding:3rem;color:var(--mid);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase}
+    @media(max-width:900px){.admin-layout{grid-template-columns:1fr}.sidebar{position:static;height:auto}.stats{grid-template-columns:1fr 1fr}}
+  </style>
+</head>
+<body>
+<script src="data.js"></script>
+
+<nav>
+  <div style="display:flex;align-items:center">
+    <a href="index.html" class="nav-logo">VTHM Street <span>·</span></a>
+    <span class="nav-badge">Administration</span>
+  </div>
+  <div class="nav-links">
+    <a href="catalogue.html?genre=homme">Voir boutique</a>
+    <a href="compte.html">Mon compte</a>
+    <a href="#" onclick="doLogout()">Déconnexion</a>
+  </div>
+</nav>
+
+<div id="appRoot"><div class="denied"><p style="font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#888">Vérification…</p></div></div>
+
+<script>
+let editingId=null, searchQ='', filterG='', filterC='';
+
+async function initAdmin() {
+  await DB.init();
+  if (!DB.isAdmin()) {
+    document.getElementById('appRoot').innerHTML = `
+      <div class="denied">
+        <h2>Accès refusé</h2>
+        <p>Vous devez être administrateur.</p>
+        <a href="compte.html">Se connecter</a>
+      </div>`;
+    return;
+  }
+  renderAdmin();
+}
+
+function renderAdmin() {
+  document.getElementById('appRoot').innerHTML = `
+    <div class="admin-layout">
+      <aside class="sidebar">
+        <h2 id="formTitle">Nouvel <em>article</em></h2>
+        <p class="sidebar-sub" id="formSub">Remplissez le formulaire</p>
+        <div class="form-row">
+          <div class="form-group"><label>Genre *</label>
+            <select id="fGenre" onchange="updateCats()"><option value="homme">Homme</option><option value="femme">Femme</option></select>
+          </div>
+          <div class="form-group"><label>Catégorie *</label><select id="fCat"></select></div>
+        </div>
+        <div class="form-group"><label>Nom du produit *</label><input type="text" id="fNom" placeholder="Ex : Veste Marine"/></div>
+        <div class="form-group"><label>Prix (€) *</label><input type="number" id="fPrix" placeholder="0" min="1" step="0.01"/></div>
+        <div class="form-group"><label>Badge <span style="color:#555;font-size:.5rem;letter-spacing:.1em">(ex: Nouveau, -20%, Bestseller)</span></label><input type="text" id="fTag" placeholder="Laisser vide si aucun badge"/></div>
+        <div class="form-group"><label>Description</label><textarea id="fDesc" rows="3" placeholder="Description courte…"></textarea></div>
+        <div class="form-group"><label>URL image *</label>
+          <input type="url" id="fImg" placeholder="https://…" oninput="previewImg()"/>
+          <div id="imgWrap"><div class="img-placeholder">Aperçu</div></div>
+        </div>
+        <button class="save-btn" id="saveBtn" onclick="saveProduct()"><span id="saveLbl">Ajouter l'article →</span></button>
+        <button class="cancel-btn" id="cancelBtn" onclick="resetForm()" style="display:none">Annuler la modification</button>
+      </aside>
+
+      <main class="main-content">
+        <div class="stats" id="statsBar"></div>
+        <div class="toolbar">
+          <div class="toolbar-title">Articles <em>en vente</em></div>
+          <input class="search-input" type="text" placeholder="Rechercher…" oninput="onSearch(this.value)"/>
+          <select class="filter-select" onchange="onFG(this.value)">
+            <option value="">Tous genres</option><option value="homme">Homme</option><option value="femme">Femme</option>
+          </select>
+          <select class="filter-select" id="catFilter" onchange="onFC(this.value)">
+            <option value="">Toutes catégories</option>
+          </select>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Image</th><th>Nom</th><th>Genre</th><th>Catégorie</th><th>Prix</th><th>Badge</th><th>Actions</th></tr></thead>
+            <tbody id="tbody"><tr class="loading-row"><td colspan="7">Chargement…</td></tr></tbody>
+          </table>
+        </div>
+      </main>
+    </div>`;
+
+  updateCats();
+  loadStats();
+  loadTable();
+}
+
+const CATS = {
+  homme:['vestes','chemises','pantalons','pulls','tops','accessoires'],
+  femme:['robes','jupes','vestes','pantalons','tops','chemisiers','accessoires']
+};
+
+function updateCats() {
+  const g   = document.getElementById('fGenre').value;
+  const sel = document.getElementById('fCat');
+  const labels = {
+    vestes:'Vestes & Manteaux', chemises:'Chemises', pantalons:'Pantalons',
+    pulls:'Pulls', tops:'Tops', accessoires:'Accessoires',
+    robes:'Robes', jupes:'Jupes', chemisiers:'Chemisiers'
+  };
+  sel.innerHTML = CATS[g].map(c=>`<option value="${c}">${labels[c]||c}</option>`).join('');
+}
+
+async function loadStats() {
+  try {
+    const [prods, users] = await Promise.all([DB.getProducts(), DB.adminUsers()]);
+    const h=prods.filter(p=>p.genre==='homme').length;
+    const f=prods.filter(p=>p.genre==='femme').length;
+    const clients=users.filter(u=>u.role!=='admin').length;
+    document.getElementById('statsBar').innerHTML = `
+      <div class="stat-card"><div class="stat-val">${prods.length}</div><div class="stat-label">Articles total</div></div>
+      <div class="stat-card"><div class="stat-val">${h}</div><div class="stat-label">Articles Homme</div></div>
+      <div class="stat-card"><div class="stat-val">${f}</div><div class="stat-label">Articles Femme</div></div>
+      <div class="stat-card"><div class="stat-val">${clients}</div><div class="stat-label">Clients inscrits</div></div>`;
+  } catch(e) { console.error(e); }
+}
+
+async function loadTable() {
+  const tbody = document.getElementById('tbody');
+  if (!tbody) return;
+  tbody.innerHTML = '<tr class="loading-row"><td colspan="7">Chargement…</td></tr>';
+  try {
+    let prods = await DB.getProducts();
+    if (searchQ) prods=prods.filter(p=>p.nom.toLowerCase().includes(searchQ.toLowerCase()));
+    if (filterG) prods=prods.filter(p=>p.genre===filterG);
+    if (filterC) prods=prods.filter(p=>p.categorie===filterC);
+
+    const allCats=[...new Set((await DB.getProducts()).map(p=>p.categorie))].sort();
+    const cf=document.getElementById('catFilter');
+    const curVal=cf.value;
+    cf.innerHTML=`<option value="">Toutes catégories</option>`+allCats.map(c=>`<option value="${c}"${c===curVal?' selected':''}>${c[0].toUpperCase()+c.slice(1)}</option>`).join('');
+
+    if (!prods.length) { tbody.innerHTML='<tr class="loading-row"><td colspan="7">Aucun article trouvé</td></tr>'; return; }
+    tbody.innerHTML = prods.map(p=>`
+      <tr>
+        <td><img class="td-img" src="${p.img}" alt="" loading="lazy"/></td>
+        <td class="td-name">${p.nom}</td>
+        <td><span class="td-badge badge-${p.genre}">${p.genre}</span></td>
+        <td style="font-size:.6rem;letter-spacing:.15em;color:var(--mid);text-transform:capitalize">${p.categorie}</td>
+        <td class="td-price">${Number(p.prix).toFixed(2)} €</td>
+        <td>${p.tag?`<span class="td-badge badge-tag">${p.tag}</span>`:'<span style="color:rgba(255,255,255,.15)">—</span>'}</td>
+        <td><div class="action-btns">
+          <button class="edit-btn" onclick="editProduct(${p.id})">Modifier</button>
+          <button class="del-btn"  onclick="deleteProduct(${p.id},'${p.nom.replace(/'/g,"\\'")}')">Supprimer</button>
+        </div></td>
+      </tr>`).join('');
+  } catch(e) { tbody.innerHTML=`<tr class="loading-row"><td colspan="7">Erreur : ${e.message}</td></tr>`; }
+}
+
+function onSearch(v){searchQ=v;loadTable();}
+function onFG(v){filterG=v;loadTable();}
+function onFC(v){filterC=v;loadTable();}
+
+function previewImg() {
+  const url=document.getElementById('fImg').value.trim();
+  document.getElementById('imgWrap').innerHTML = url
+    ? `<img class="img-preview" src="${url}" loading="lazy" onerror="this.style.display='none'"/>`
+    : `<div class="img-placeholder">Aperçu</div>`;
+}
+
+async function saveProduct() {
+  const nom  =document.getElementById('fNom').value.trim();
+  const prix =parseFloat(document.getElementById('fPrix').value);
+  const img  =document.getElementById('fImg').value.trim();
+  const genre=document.getElementById('fGenre').value;
+  const cat  =document.getElementById('fCat').value;
+  const tag  =document.getElementById('fTag').value.trim();
+  const desc =document.getElementById('fDesc').value.trim();
+
+  if (!nom)       { showToast('Le nom est requis'); return; }
+  if (!prix||prix<=0){ showToast('Prix invalide'); return; }
+  if (!img)       { showToast("URL image requise"); return; }
+
+  const btn=document.getElementById('saveBtn');
+  btn.disabled=true;
+  document.getElementById('saveLbl').textContent='Sauvegarde…';
+
+  const product={nom,prix,img,genre,categorie:cat,tag,description:desc};
+  if (editingId) product.id=editingId;
+
+  try {
+    await DB.saveProduct(product);
+    showToast(editingId?'Article modifié ✓':'Article ajouté ✓');
+    resetForm();
+    loadStats();
+    loadTable();
+  } catch(e) {
+    showToast('Erreur : '+e.message);
+  }
+  btn.disabled=false;
+  document.getElementById('saveLbl').textContent = editingId?'Enregistrer →':"Ajouter l'article →";
+}
+
+async function editProduct(id) {
+  let p;
+  try { p = await DB.getProductById(id); }
+  catch(e){ showToast('Erreur : '+e.message); return; }
+
+  editingId=id;
+  document.getElementById('fGenre').value=p.genre; updateCats();
+  document.getElementById('fCat').value  =p.categorie;
+  document.getElementById('fNom').value  =p.nom;
+  document.getElementById('fPrix').value =p.prix;
+  document.getElementById('fTag').value  =p.tag||'';
+  document.getElementById('fDesc').value =p.description||'';
+  document.getElementById('fImg').value  =p.img; previewImg();
+
+  document.getElementById('formTitle').innerHTML="Modifier l'<em>article</em>";
+  document.getElementById('formSub').textContent=p.nom;
+  document.getElementById('saveLbl').textContent='Enregistrer les modifications →';
+  document.getElementById('cancelBtn').style.display='';
+  document.querySelector('.sidebar').scrollTop=0;
+}
+
+async function deleteProduct(id, nom) {
+  if (!confirm(`Supprimer "${nom}" ?`)) return;
+  try {
+    await DB.deleteProduct(id);
+    if (editingId===id) resetForm();
+    showToast('Article supprimé');
+    loadStats(); loadTable();
+  } catch(e) { showToast('Erreur : '+e.message); }
+}
+
+function resetForm() {
+  editingId=null;
+  ['fNom','fPrix','fTag','fDesc','fImg'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('fGenre').value='homme'; updateCats();
+  document.getElementById('imgWrap').innerHTML='<div class="img-placeholder">Aperçu</div>';
+  document.getElementById('formTitle').innerHTML="Nouvel <em>article</em>";
+  document.getElementById('formSub').textContent='Remplissez le formulaire';
+  document.getElementById('saveLbl').textContent="Ajouter l'article →";
+  document.getElementById('cancelBtn').style.display='none';
+  document.getElementById('saveBtn').disabled=false;
+}
+
+initAdmin();
+</script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>VTHM Street - Mon Compte</title>
+  <link href="logo.png" rel="shortcut icon" type="image/x-icon" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{--accent:#c9a84c;--darker:#090909;--light:#f5f0eb;--mid:#888}
+    body{background:var(--darker);color:var(--light);font-family:'Montserrat',sans-serif;min-height:100vh;display:flex;flex-direction:column}
+    nav{display:flex;justify-content:space-between;align-items:center;padding:1.4rem 3rem;border-bottom:1px solid rgba(255,255,255,.07);background:rgba(9,9,9,.96);backdrop-filter:blur(12px);position:sticky;top:0;z-index:200}
+    .nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;letter-spacing:.35em;text-transform:uppercase;color:var(--light);text-decoration:none}
+    .nav-logo span{color:var(--accent)}
+    .nav-home{font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:var(--mid);text-decoration:none;transition:color .3s}
+    .nav-home:hover{color:var(--accent)}
+    main{flex:1;display:flex;align-items:center;justify-content:center;padding:3rem 1.5rem}
+    .auth-box{width:100%;max-width:440px}
+    .auth-tabs{display:flex;gap:2px;margin-bottom:2.5rem}
+    .tab{flex:1;text-align:center;padding:.9rem;font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;cursor:pointer;background:#141414;border:1px solid rgba(255,255,255,.07);transition:all .3s;color:var(--mid)}
+    .tab.active{border-color:var(--accent);color:var(--accent);background:rgba(201,168,76,.06)}
+    .auth-title{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:300;margin-bottom:.5rem}
+    .auth-title em{font-style:italic;color:var(--accent)}
+    .auth-sub{font-size:.56rem;letter-spacing:.22em;color:var(--mid);text-transform:uppercase;margin-bottom:2rem}
+    .form-group{margin-bottom:1.2rem}
+    label{display:block;font-size:.54rem;letter-spacing:.22em;text-transform:uppercase;color:var(--mid);margin-bottom:.5rem}
+    input{width:100%;background:#141414;border:1px solid rgba(255,255,255,.12);color:var(--light);padding:.85rem 1rem;font-family:'Montserrat',sans-serif;font-size:.8rem;transition:border-color .3s;outline:none}
+    input:focus{border-color:var(--accent)}
+    input::placeholder{color:rgba(255,255,255,.2)}
+    .error-msg{font-size:.55rem;letter-spacing:.15em;color:#e06060;margin-top:.5rem;display:none}
+    .submit-btn{display:block;width:100%;margin-top:1.8rem;padding:1rem;font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;background:var(--accent);color:#000;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:600;transition:opacity .3s}
+    .submit-btn:hover:not(:disabled){opacity:.85}
+    .submit-btn:disabled{opacity:.5;cursor:not-allowed}
+    .form-note{font-size:.52rem;letter-spacing:.15em;color:rgba(255,255,255,.25);text-align:center;margin-top:1.2rem;text-transform:uppercase}
+    .logged-box{text-align:center;padding:2rem 0}
+    .logged-box h2{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;margin-bottom:.4rem}
+    .logged-box h2 em{font-style:italic;color:var(--accent)}
+    .logged-box p{font-size:.58rem;letter-spacing:.2em;color:var(--mid);text-transform:uppercase;margin-bottom:.5rem}
+    .admin-badge{display:inline-block;font-size:.5rem;letter-spacing:.2em;background:rgba(201,168,76,.15);color:var(--accent);border:1px solid rgba(201,168,76,.3);padding:.3rem .8rem;text-transform:uppercase;margin-top:.6rem}
+    .logged-actions{display:flex;flex-direction:column;gap:.8rem;margin-top:2rem}
+    .btn-action{display:block;text-align:center;padding:.85rem;font-size:.58rem;letter-spacing:.24em;text-transform:uppercase;text-decoration:none;transition:all .3s;cursor:pointer;font-family:'Montserrat',sans-serif}
+    .btn-primary{background:var(--accent);color:#000;border:none}
+    .btn-primary:hover{opacity:.85}
+    .btn-outline{border:1px solid rgba(255,255,255,.18);color:var(--mid);background:none}
+    .btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+    .btn-danger{border:none;background:none;color:rgba(255,255,255,.25)}
+    .btn-danger:hover{color:#e06060}
+    .orders-list{margin-top:2rem;text-align:left}
+    .orders-list h3{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:300;margin-bottom:1rem}
+    .order-item{background:#141414;padding:1rem 1.2rem;margin-bottom:2px;display:flex;justify-content:space-between;align-items:center;font-size:.6rem;letter-spacing:.15em}
+    .order-id{color:var(--accent)}
+    .order-total{font-family:'Cormorant Garamond',serif;font-size:1.1rem}
+    .order-date{color:var(--mid);font-size:.52rem}
+    .order-statut{font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;padding:.2rem .6rem;background:rgba(201,168,76,.1);color:var(--accent);border:1px solid rgba(201,168,76,.2)}
+  </style>
+</head>
+<body>
+<script src="data.js"></script>
+<nav>
+  <a href="index.html" class="nav-logo">VTHM Street <span>·</span> Mon Compte</a>
+  <a href="index.html" class="nav-home">← Accueil</a>
+</nav>
+<main><div class="auth-box" id="authBox"><p style="text-align:center;color:#888;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase">Chargement…</p></div></main>
+
+<script>
+async function init() {
+  await DB.init();
+  renderPage();
+}
+
+function renderPage() {
+  const user = DB.currentUser();
+  const box  = document.getElementById('authBox');
+  if (user) {
+    box.innerHTML = `
+      <div class="logged-box">
+        <h2>Bonjour, <em>${user.nom}</em></h2>
+        <p>${user.email}</p>
+        ${user.role==='admin'?`<span class="admin-badge">Administrateur</span>`:''}
+        <div class="logged-actions">
+          <a href="panier.html" class="btn-action btn-outline">🛍 Mon panier</a>
+          ${user.role==='admin'?`<a href="admin.html" class="btn-action btn-outline">⚙️ Interface admin</a>`:''}
+          <button class="btn-action btn-danger" onclick="logout()">Se déconnecter</button>
+        </div>
+      </div>
+      <div class="orders-list" id="ordersList"></div>`;
+    loadOrders();
+    return;
+  }
+  box.innerHTML = `
+    <div class="auth-tabs">
+      <div class="tab active" id="tabLogin" onclick="switchTab('login')">Connexion</div>
+      <div class="tab" id="tabReg" onclick="switchTab('register')">Inscription</div>
+    </div>
+    <div id="formLogin">
+      <h1 class="auth-title">Se <em>connecter</em></h1>
+      <p class="auth-sub">Accédez à votre espace</p>
+      <div class="form-group"><label>Email</label><input type="email" id="lEmail" placeholder="votre@email.fr" autocomplete="email"/></div>
+      <div class="form-group"><label>Mot de passe</label><input type="password" id="lPwd" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+      <div class="error-msg" id="lErr"></div>
+      <button class="submit-btn" id="lBtn" onclick="doLogin()">Connexion →</button>
+    </div>
+    <div id="formReg" style="display:none">
+      <h1 class="auth-title"><em>Créer</em> un compte</h1>
+      <p class="auth-sub">Rejoignez la VTHM Street</p>
+      <div class="form-group"><label>Nom complet</label><input type="text" id="rNom" placeholder="Prénom Nom" autocomplete="name"/></div>
+      <div class="form-group"><label>Email</label><input type="email" id="rEmail" placeholder="votre@email.fr" autocomplete="email"/></div>
+      <div class="form-group"><label>Mot de passe</label><input type="password" id="rPwd" placeholder="Min. 6 caractères" autocomplete="new-password"/></div>
+      <div class="form-group"><label>Confirmer</label><input type="password" id="rPwd2" placeholder="••••••••" autocomplete="new-password" onkeydown="if(event.key==='Enter')doRegister()"/></div>
+      <div class="error-msg" id="rErr"></div>
+      <button class="submit-btn" id="rBtn" onclick="doRegister()">Créer mon compte →</button>
+    </div>`;
+}
+
+function switchTab(t) {
+  document.getElementById('tabLogin').classList.toggle('active',t==='login');
+  document.getElementById('tabReg').classList.toggle('active',t==='register');
+  document.getElementById('formLogin').style.display = t==='login'?'':'none';
+  document.getElementById('formReg').style.display   = t==='register'?'':'none';
+}
+
+function showErr(id,msg){const e=document.getElementById(id);e.textContent=msg;e.style.display='block';}
+function hideErr(id){const e=document.getElementById(id);if(e)e.style.display='none';}
+
+async function doLogin() {
+  hideErr('lErr');
+  const email=document.getElementById('lEmail').value.trim();
+  const pwd  =document.getElementById('lPwd').value;
+  if(!email||!pwd){showErr('lErr','Veuillez remplir tous les champs.');return;}
+  const btn=document.getElementById('lBtn');
+  btn.disabled=true; btn.textContent='Connexion…';
+  try {
+    await DB.login(email, pwd);
+    const redirect = new URLSearchParams(location.search).get('redirect')||'index.html';
+    location.href = redirect;
+  } catch(e) {
+    showErr('lErr', e.message);
+    btn.disabled=false; btn.textContent='Connexion →';
+  }
+}
+
+async function doRegister() {
+  hideErr('rErr');
+  const nom  =document.getElementById('rNom').value.trim();
+  const email=document.getElementById('rEmail').value.trim();
+  const pwd  =document.getElementById('rPwd').value;
+  const pwd2 =document.getElementById('rPwd2').value;
+  if(!nom||!email||!pwd||!pwd2){showErr('rErr','Veuillez remplir tous les champs.');return;}
+  if(pwd.length<6){showErr('rErr','Mot de passe trop court (6 car. min).');return;}
+  if(pwd!==pwd2){showErr('rErr','Les mots de passe ne correspondent pas.');return;}
+  const btn=document.getElementById('rBtn');
+  btn.disabled=true; btn.textContent='Création…';
+  try {
+    await DB.register(nom, email, pwd);
+    showToast('Compte créé — Bienvenue ! ✓');
+    setTimeout(()=>location.href='index.html',1500);
+  } catch(e) {
+    showErr('rErr', e.message);
+    btn.disabled=false; btn.textContent='Créer mon compte →';
+  }
+}
+
+async function logout() {
+  await DB.logout();
+  renderPage();
+}
+
+async function loadOrders() {
+  try {
+    const orders = await DB.getOrders();
+    const div    = document.getElementById('ordersList');
+    if (!orders.length) { div.innerHTML='<h3>Mes commandes</h3><p style="font-size:.58rem;letter-spacing:.2em;color:#666;text-transform:uppercase">Aucune commande pour l\'instant.</p>'; return; }
+    div.innerHTML = `<h3>Mes commandes</h3>` +
+      orders.map(o=>`
+        <div class="order-item">
+          <div>
+            <div class="order-id">#${o.id}</div>
+            <div class="order-date">${new Date(o.created_at).toLocaleDateString('fr-FR')}</div>
+          </div>
+          <div class="order-total">${Number(o.total).toFixed(2)} €</div>
+          <span class="order-statut">${o.statut}</span>
+        </div>`).join('');
+  } catch { /* silencieux */ }
+}
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>VTHM Street - Panier</title>
+  <link href="logo.png" rel="shortcut icon" type="image/x-icon" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{--accent:#c9a84c;--darker:#090909;--light:#f5f0eb;--mid:#888}
+    body{background:var(--darker);color:var(--light);font-family:'Montserrat',sans-serif;min-height:100vh}
+    .page{max-width:1100px;margin:0 auto;padding:3rem 2rem}
+    h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,5vw,4rem);font-weight:300;margin-bottom:.4rem}
+    h1 em{font-style:italic;color:var(--accent)}
+    .sub{font-size:.58rem;letter-spacing:.28em;color:var(--mid);text-transform:uppercase;margin-bottom:3rem}
+    .cart-item{display:grid;grid-template-columns:90px 1fr auto;gap:1.5rem;align-items:center;background:#141414;padding:1.2rem 1.4rem;margin-bottom:2px;animation:fadeUp .4s ease both}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+    .cart-item img{width:90px;height:112px;object-fit:cover}
+    .item-name{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:300;margin-bottom:.3rem}
+    .item-meta{font-size:.56rem;letter-spacing:.2em;color:var(--mid);text-transform:uppercase;margin-bottom:.8rem}
+    .item-price{font-size:.75rem;letter-spacing:.18em;color:var(--accent)}
+    .qty-wrap{display:flex;align-items:center;gap:.6rem;margin-top:.8rem}
+    .qty-btn{width:28px;height:28px;border:1px solid rgba(255,255,255,.15);background:transparent;color:var(--light);cursor:pointer;font-size:.9rem;transition:border-color .3s}
+    .qty-btn:hover{border-color:var(--accent);color:var(--accent)}
+    .qty-val{font-size:.7rem;min-width:20px;text-align:center}
+    .item-right{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:.8rem}
+    .item-total{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:300}
+    .remove-btn{font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3);background:none;border:none;cursor:pointer;transition:color .3s}
+    .remove-btn:hover{color:#e06060}
+    .summary{margin-top:3rem;display:flex;justify-content:flex-end}
+    .summary-box{background:#141414;padding:2rem 2.5rem;min-width:340px}
+    .summary-box h2{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;margin-bottom:1.5rem}
+    .sum-line{display:flex;justify-content:space-between;font-size:.6rem;letter-spacing:.18em;color:var(--mid);text-transform:uppercase;margin-bottom:.8rem}
+    .sum-line.total{color:var(--light);font-size:.68rem;border-top:1px solid rgba(255,255,255,.1);padding-top:1rem;margin-top:1rem}
+    .sum-line.total span:last-child{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--accent)}
+    .checkout-btn{display:block;width:100%;margin-top:1.5rem;padding:1rem;font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;background:var(--accent);color:#000;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:600;transition:opacity .3s}
+    .checkout-btn:hover:not(:disabled){opacity:.85}
+    .checkout-btn:disabled{opacity:.5;cursor:not-allowed}
+    .empty-cart{text-align:center;padding:6rem 2rem;color:var(--mid)}
+    .empty-cart h2{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;margin-bottom:1rem}
+    .empty-cart p{font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;margin-bottom:2rem}
+    .btn-link{display:inline-block;font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;border:1px solid var(--accent);color:var(--accent);padding:.7rem 2rem;text-decoration:none;transition:all .3s}
+    .btn-link:hover{background:var(--accent);color:#000}
+    .clear-btn{font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.2);background:none;border:none;cursor:pointer;margin-top:.6rem;display:block;transition:color .3s}
+    .clear-btn:hover{color:#e06060}
+    .loading{text-align:center;padding:4rem;color:var(--mid);font-size:.6rem;letter-spacing:.3em;text-transform:uppercase}
+  </style>
+</head>
+<body>
+<script src="data.js"></script>
+<nav>
+  <a href="index.html" class="nav-logo">VTHM Street <span>·</span> <span class="genre-label">Panier</span></a>
+  <div class="nav-links">
+    <a href="catalogue.html?genre=homme">Homme</a>
+    <a href="catalogue.html?genre=femme">Femme</a>
+  </div>
+  <div class="nav-right" id="navRight"></div>
+</nav>
+
+<div class="page">
+  <h1>Mon <em>Panier</em></h1>
+  <p class="sub" id="cartSub">Chargement…</p>
+  <div id="cartContent"><div class="loading">Chargement du panier…</div></div>
+</div>
+
+<script>
+async function initCartPage() {
+  await DB.init();
+
+  const user = DB.currentUser();
+  document.getElementById('navRight').innerHTML = user
+    ? `<span class="nav-user">${user.nom.split(' ')[0]}</span>
+       <a href="#" class="nav-user" onclick="doLogout()">Déco.</a>
+       <a href="panier.html" class="nav-cart">🛍<span class="cart-badge" style="display:none">0</span></a>`
+    : `<a href="compte.html" class="nav-user">Connexion</a>
+       <a href="panier.html" class="nav-cart">🛍<span class="cart-badge" style="display:none">0</span></a>`;
+
+  await render();
+}
+
+async function render() {
+  let cart;
+  try { cart = await DB.getCart(); }
+  catch(e) { document.getElementById('cartContent').innerHTML=`<div class="loading">Erreur : ${e.message}</div>`; return; }
+
+  await updateCartBadge();
+
+  const sub     = document.getElementById('cartSub');
+  const content = document.getElementById('cartContent');
+  const count   = cart.reduce((s,i)=>s+i.quantite,0);
+
+  if (!cart.length) {
+    sub.textContent = '0 article';
+    content.innerHTML = `<div class="empty-cart">
+      <h2>Votre panier est vide</h2>
+      <p>Découvrez nos collections</p>
+      <a href="catalogue.html?genre=homme" class="btn-link" style="margin-right:1rem">Homme</a>
+      <a href="catalogue.html?genre=femme" class="btn-link">Femme</a>
+    </div>`;
+    return;
+  }
+
+  sub.textContent = count + ' article' + (count > 1 ? 's' : '');
+  const sousTotal  = cart.reduce((s,i)=>s+i.prix*i.quantite,0);
+  const livraison  = sousTotal >= 150 ? 0 : 9.90;
+  const total      = sousTotal + livraison;
+
+  content.innerHTML = `
+    ${cart.map((item,idx) => `
+      <div class="cart-item" style="animation-delay:${idx*.07}s">
+        <img src="${item.img}" alt="${item.nom}"/>
+        <div>
+          <div class="item-name">${item.nom}</div>
+          <div class="item-meta">Taille : ${item.taille} &nbsp;|&nbsp; Genre : ${item.genre}</div>
+          <div class="item-price">${Number(item.prix).toFixed(2)} € / unité</div>
+          <div class="qty-wrap">
+            <button class="qty-btn" onclick="changeQty(${item.id},${item.quantite-1})">−</button>
+            <span class="qty-val">${item.quantite}</span>
+            <button class="qty-btn" onclick="changeQty(${item.id},${item.quantite+1})">+</button>
+          </div>
+        </div>
+        <div class="item-right">
+          <div class="item-total">${(item.prix*item.quantite).toFixed(2)} €</div>
+          <button class="remove-btn" onclick="removeItem(${item.id})">Supprimer</button>
+        </div>
+      </div>`).join('')}
+    <button class="clear-btn" onclick="clearAll()">Vider le panier</button>
+    <div class="summary">
+      <div class="summary-box">
+        <h2>Récapitulatif</h2>
+        <div class="sum-line"><span>Sous-total</span><span>${sousTotal.toFixed(2)} €</span></div>
+        <div class="sum-line"><span>Livraison</span><span>${livraison===0?'Offerte':livraison.toFixed(2)+' €'}</span></div>
+        <div class="sum-line total"><span>Total</span><span>${total.toFixed(2)} €</span></div>
+        <button class="checkout-btn" id="orderBtn" onclick="commander()">Passer la commande →</button>
+      </div>
+    </div>`;
+}
+
+async function changeQty(id, qty) {
+  try {
+    if (qty < 1) { await DB.removeFromCart(id); }
+    else { await DB.updateQty(id, qty); }
+    await render();
+  } catch(e) { showToast('Erreur : '+e.message); }
+}
+
+async function removeItem(id) {
+  try { await DB.removeFromCart(id); await render(); }
+  catch(e) { showToast('Erreur : '+e.message); }
+}
+
+async function clearAll() {
+  if (!confirm('Vider le panier ?')) return;
+  try { await DB.clearCart(); await render(); }
+  catch(e) { showToast('Erreur : '+e.message); }
+}
+
+async function commander() {
+  if (!DB.currentUser()) {
+    showToast('Connectez-vous pour commander');
+    setTimeout(()=>location.href='compte.html?redirect=panier.html',1500);
+    return;
+  }
+  const btn = document.getElementById('orderBtn');
+  btn.disabled = true; btn.textContent = 'Traitement…';
+  try {
+    const res = await DB.createOrder();
+    showToast('Commande #'+res.commande_id+' confirmée — Merci ! ✓');
+    setTimeout(()=>render(),2000);
+  } catch(e) {
+    showToast('Erreur : '+e.message);
+    btn.disabled=false; btn.textContent='Passer la commande →';
+  }
+}
+
+initCartPage();
+</script>
+</body>
+</html>
