@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>VTHM Street - Mon Compte</title>
-  <link href="logo.png" rel="shortcut icon" type="image/x-icon" />
+  <title>VTHM STREET - Mon Compte</title>
+  <link rel="icon" href="logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet"/>
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -53,13 +53,15 @@
     .order-total{font-family:'Cormorant Garamond',serif;font-size:1.1rem}
     .order-date{color:var(--mid);font-size:.52rem}
     .order-statut{font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;padding:.2rem .6rem;background:rgba(201,168,76,.1);color:var(--accent);border:1px solid rgba(201,168,76,.2)}
-  </style>
+  .nav-contact{font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:#f5f0eb;text-decoration:none;border:1px solid rgba(255,255,255,.25);padding:.4rem 1rem;transition:all .3s;white-space:nowrap}.nav-contact:hover{background:#f5f0eb;color:#000}
+</style>
 </head>
 <body>
 <script src="data.js"></script>
 <nav>
   <a href="index.html" class="nav-logo">VTHM Street <span>·</span> Mon Compte</a>
   <a href="index.html" class="nav-home">← Accueil</a>
+  <a href="contact.html" class="nav-contact">Contactez-nous</a>
 </nav>
 <main><div class="auth-box" id="authBox"><p style="text-align:center;color:#888;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase">Chargement…</p></div></main>
 
@@ -100,6 +102,7 @@ function renderPage() {
       <div class="form-group"><label>Mot de passe</label><input type="password" id="lPwd" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
       <div class="error-msg" id="lErr"></div>
       <button class="submit-btn" id="lBtn" onclick="doLogin()">Connexion →</button>
+      <p class="form-note">Compte admin : admin@velour.fr / admin2025</p>
     </div>
     <div id="formReg" style="display:none">
       <h1 class="auth-title"><em>Créer</em> un compte</h1>

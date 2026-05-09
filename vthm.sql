@@ -1,34 +1,19 @@
--- ============================================================
---  VELOUR — Base de données MySQL
---  Importer via : mysql -u root -p < velour.sql
---  Ou via phpMyAdmin > Importer
--- ============================================================
-
 CREATE DATABASE IF NOT EXISTS vthm CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE vthm;
 
--- ============================================================
---  TABLE : utilisateurs
--- ============================================================
 DROP TABLE IF EXISTS utilisateurs;
 CREATE TABLE utilisateurs (
   id         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   nom        VARCHAR(120)  NOT NULL,
   email      VARCHAR(180)  NOT NULL UNIQUE,
-  password   VARCHAR(255)  NOT NULL,          -- hash bcrypt
+  password   VARCHAR(255)  NOT NULL,          
   role       ENUM('client','admin') NOT NULL DEFAULT 'client',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
-
--- Compte admin par défaut (mot de passe : admin2025)
--- Le hash est généré par setup.php au premier lancement
--- On insère un placeholder que setup.php remplace
+s
 INSERT INTO utilisateurs (nom, email, password, role) VALUES
 ('Administrateur', 'admin@vthm.fr', 'admin', 'admin');
 
--- ============================================================
---  TABLE : produits
--- ============================================================
 DROP TABLE IF EXISTS produits;
 CREATE TABLE produits (
   id          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -45,7 +30,7 @@ CREATE TABLE produits (
 ) ENGINE=InnoDB;
 
 INSERT INTO produits (genre, categorie, nom, prix, tag, img, description) VALUES
--- HOMME
+
 ('homme','vestes',    'Veste Structurée Gris Charbon', 289.00, 'Nouveau',
  'https://images.unsplash.com/photo-1617137968427-85924c800a22?w=600&q=80',
  'Veste en laine structurée, coupe ajustée, doublure satinée.'),
@@ -78,7 +63,6 @@ INSERT INTO produits (genre, categorie, nom, prix, tag, img, description) VALUES
  'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=600&q=80',
  'T-shirt en coton Pima péruvien, coupe légèrement oversize.'),
 
--- FEMME
 ('femme','robes',     'Robe Midi Soie Ivoire',         320.00, 'Nouveau',
  'https://images.unsplash.com/photo-1581044777550-4cfa60707c03?w=600&q=80',
  'Robe midi en soie ivoire, décolleté V, ceinture fine incluse.'),
@@ -111,14 +95,11 @@ INSERT INTO produits (genre, categorie, nom, prix, tag, img, description) VALUES
  'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80',
  'Jupe midi plissée en satin taupe, taille élastiquée.');
 
--- ============================================================
---  TABLE : paniers  (lignes de panier, liées à session ou user)
--- ============================================================
 DROP TABLE IF EXISTS panier_items;
 CREATE TABLE panier_items (
   id             INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  session_token  VARCHAR(64)  NOT NULL,          -- identifie le panier (visiteur ou connecté)
-  user_id        INT UNSIGNED DEFAULT NULL,       -- NULL si non connecté
+  session_token  VARCHAR(64)  NOT NULL,        
+  user_id        INT UNSIGNED DEFAULT NULL,      
   produit_id     INT UNSIGNED NOT NULL,
   taille         VARCHAR(10)  NOT NULL DEFAULT 'M',
   quantite       SMALLINT     NOT NULL DEFAULT 1,
@@ -127,9 +108,6 @@ CREATE TABLE panier_items (
   FOREIGN KEY (produit_id) REFERENCES produits(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
--- ============================================================
---  TABLE : commandes  (historique)
--- ============================================================
 DROP TABLE IF EXISTS commandes;
 CREATE TABLE commandes (
   id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -155,9 +133,6 @@ CREATE TABLE commande_lignes (
   FOREIGN KEY (produit_id)  REFERENCES produits(id) ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
--- ============================================================
---  INDEX utiles
--- ============================================================
 CREATE INDEX idx_produits_genre     ON produits(genre);
 CREATE INDEX idx_produits_categorie ON produits(categorie);
 CREATE INDEX idx_panier_session     ON panier_items(session_token);

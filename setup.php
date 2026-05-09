@@ -55,7 +55,8 @@ $ok = empty($errors);
 <html lang="fr">
 <head>
   <meta charset="UTF-8"/>
-  <title>VTHM Street — Setup</title>
+  <title>VTHM Street - Setup</title>
+  <link rel="icon" href="logo.png">
   <style>
     body{background:#0a0a0a;color:#f0ebe5;font-family:'Courier New',monospace;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;padding:1rem}
     .box{background:#141414;border:1px solid <?= $ok?'rgba(110,201,122,.4)':'rgba(224,96,96,.4)' ?>;padding:2rem 2.5rem;max-width:580px;width:100%}

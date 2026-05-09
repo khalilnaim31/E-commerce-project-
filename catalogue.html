@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>VTHM STREET - Catalogue</title>
-  <link href="logo.png" rel="shortcut icon" type="image/x-icon" />
+  <link rel="icon" href="logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet"/>
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -67,8 +67,8 @@ document.getElementById('heroTitle').innerHTML = genre === 'homme'
 if (genre === 'femme') document.documentElement.style.setProperty('--accent','#b08a8a');
 
 const catsDef = genre === 'homme'
-  ? [['','Tout'],['vestes','Vestes & Manteaux'],['chemises','Chemises'],['pantalons','Pantalons'],['pulls','Pulls'],['tops','Tops'],['accessoires','Accessoires']]
-  : [['','Tout'],['robes','Robes'],['jupes','Jupes'],['vestes','Vestes & Manteaux'],['pantalons','Pantalons'],['tops','Tops'],['chemisiers','Chemisiers'],['accessoires','Accessoires']];
+  ? [['','Tout'],['vestes','Vestes & Manteaux'],['chemises','Chemises'],['pantalons','Pantalons'],['pulls','Pulls'],['tops','Tops']]
+  : [['','Tout'],['robes','Robes'],['jupes','Jupes'],['vestes','Vestes & Manteaux'],['pantalons','Pantalons'],['tops','Tops & Chemisiers']];
 
 catsDef.forEach(([k,l]) => {
   const btn = document.createElement('button');

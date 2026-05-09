@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>VTHM Street</title>
-  <link href="logo.png" rel="shortcut icon" type="image/x-icon" />
+  <title>VTHM STREET - Maison de Mode</title>
+  <link rel="icon" href="logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet"/>
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -38,7 +38,8 @@
     @keyframes fadeIn{from{opacity:0}to{opacity:1}}
     @keyframes riseIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
     a{text-decoration:none;color:inherit}
-  </style>
+  .nav-contact{font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:#f5f0eb;text-decoration:none;border:1px solid rgba(255,255,255,.25);padding:.4rem 1rem;transition:all .3s;white-space:nowrap}.nav-contact:hover{background:#f5f0eb;color:#000}
+</style>
 </head>
 <body>
 <script src="data.js"></script>
@@ -49,22 +50,23 @@
 
 <div class="logo">
   <span class="logo-text">VTHM Street</span>
-  <span class="logo-sub">Maison de mode — Choisissez votre univers</span>
+  <span class="logo-sub">Maison de mode - Choisissez votre univers</span>
 </div>
 <div class="divider"></div>
 
 <div class="container">
-  <a href="catalogue.html" class="panel panel-homme">
+  <a href="catalogue.html?genre=homme" class="panel panel-homme">
     <div class="panel-content"><div class="panel-label">Homme</div><span class="panel-cta">Découvrir la collection →</span></div>
-    <span class="panel-num">Collection 2026</span>
+    <span class="panel-num">Collection 2025</span>
   </a>
-  <a href="catalogue.html" class="panel panel-femme">
+  <a href="catalogue.html?genre=femme" class="panel panel-femme">
     <div class="panel-content"><div class="panel-label">Femme</div><span class="panel-cta">Découvrir la collection →</span></div>
-    <span class="panel-num">Collection 2026</span>
+    <span class="panel-num">Collection 2025</span>
   </a>
 </div>
 
 <script>
+// Cursor
 const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
 let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
@@ -74,6 +76,7 @@ document.querySelectorAll('a').forEach(el=>{
   el.addEventListener('mouseleave',()=>{cursor.style.transform='translate(-50%,-50%) scale(1)';ring.style.transform='translate(-50%,-50%) scale(1)';});
 });
 
+// Top bar
 async function initIndex() {
   await DB.init();
   const user=DB.currentUser();
@@ -82,9 +85,11 @@ async function initIndex() {
     bar.innerHTML=`<span>${user.nom.split(' ')[0]}</span>
       ${DB.isAdmin()?`<a href="admin.html">Admin</a>`:''}
       <a href="#" onclick="doLogout()">Déconnexion</a>
+      <a href="contact.html" style="border:1px solid rgba(255,255,255,.25);padding:.3rem .8rem">Contactez-nous</a>
       <a href="panier.html" class="top-cart">🛍<span class="cart-badge">0</span></a>`;
   } else {
     bar.innerHTML=`<a href="compte.html">Connexion</a>
+      <a href="contact.html" style="border:1px solid rgba(255,255,255,.25);padding:.3rem .8rem">Contactez-nous</a>
       <a href="panier.html" class="top-cart">🛍<span class="cart-badge">0</span></a>`;
   }
   updateCartBadge();

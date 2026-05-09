@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>VTHM Street - Panier</title>
-  <link href="logo.png" rel="shortcut icon" type="image/x-icon" />
+  <title>VTHM STREET - Panier</title>
+  <link rel="icon" href="logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet"/>
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -45,7 +45,8 @@
     .clear-btn{font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.2);background:none;border:none;cursor:pointer;margin-top:.6rem;display:block;transition:color .3s}
     .clear-btn:hover{color:#e06060}
     .loading{text-align:center;padding:4rem;color:var(--mid);font-size:.6rem;letter-spacing:.3em;text-transform:uppercase}
-  </style>
+  .nav-contact{font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:#f5f0eb;text-decoration:none;border:1px solid rgba(255,255,255,.25);padding:.4rem 1rem;transition:all .3s;white-space:nowrap}.nav-contact:hover{background:#f5f0eb;color:#000}
+</style>
 </head>
 <body>
 <script src="data.js"></script>
@@ -68,12 +69,15 @@
 async function initCartPage() {
   await DB.init();
 
+  // nav right
   const user = DB.currentUser();
   document.getElementById('navRight').innerHTML = user
     ? `<span class="nav-user">${user.nom.split(' ')[0]}</span>
        <a href="#" class="nav-user" onclick="doLogout()">Déco.</a>
+       <a href="contact.html" class="nav-contact">Contactez-nous</a>
        <a href="panier.html" class="nav-cart">🛍<span class="cart-badge" style="display:none">0</span></a>`
     : `<a href="compte.html" class="nav-user">Connexion</a>
+       <a href="contact.html" class="nav-contact">Contactez-nous</a>
        <a href="panier.html" class="nav-cart">🛍<span class="cart-badge" style="display:none">0</span></a>`;
 
   await render();

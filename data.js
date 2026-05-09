@@ -65,7 +65,7 @@ async function updateCartBadge() {
       el.textContent = count;
       el.style.display = count > 0 ? 'flex' : 'none';
     });
-  } catch { /* silencieux */ }
+  } catch {  }
 }
 
 function buildNav(genre) {
@@ -89,6 +89,7 @@ function buildNav(genre) {
     <div class="nav-links"><a href="catalogue.html?genre=${genre}">Tout</a>${catLinks}</div>
     <div class="nav-right">${userArea}
       <a href="catalogue.html?genre=${opposite}" class="nav-switch">${label}</a>
+      <a href="contact.html" class="nav-cart" title="Contactez-nous" style="font-size:1.1rem">✉</a>
       <a href="panier.html" class="nav-cart">🛍<span class="cart-badge" style="display:none">0</span></a>
     </div>
   </nav>`;
@@ -120,6 +121,7 @@ if (!document.getElementById('velour-nav-css')) {
     .nav-right{display:flex;align-items:center;gap:1rem;white-space:nowrap}
     .nav-user{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:#aaa;text-decoration:none;transition:color .3s}.nav-user:hover{color:var(--accent,#c9a84c)}
     .nav-admin-btn{font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;background:rgba(201,168,76,.15);color:var(--accent,#c9a84c);padding:.3rem .8rem;border:1px solid rgba(201,168,76,.3);text-decoration:none;transition:all .3s}.nav-admin-btn:hover{background:var(--accent,#c9a84c);color:#000}
+    .nav-contact{font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:#f5f0eb;text-decoration:none;border:1px solid rgba(255,255,255,.25);padding:.4rem 1rem;transition:all .3s;white-space:nowrap}.nav-contact:hover{background:#f5f0eb;color:#000}
     .nav-switch{font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent,#c9a84c);text-decoration:none;border:1px solid rgba(201,168,76,.3);padding:.4rem 1rem;transition:all .3s}.nav-switch:hover{background:var(--accent,#c9a84c);color:#000}
     .nav-cart{position:relative;font-size:1.2rem;text-decoration:none;display:flex;align-items:center}
     .cart-badge{position:absolute;top:-6px;right:-8px;background:var(--accent,#c9a84c);color:#000;font-size:.5rem;font-weight:700;min-width:16px;height:16px;border-radius:50%;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif}
