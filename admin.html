@@ -69,6 +69,7 @@
   .nav-contact{font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:#f5f0eb;text-decoration:none;border:1px solid rgba(255,255,255,.25);padding:.4rem 1rem;transition:all .3s;white-space:nowrap}.nav-contact:hover{background:#f5f0eb;color:#000}
 </style>
 </head>
+
 <body>
 <script src="data.js"></script>
 
@@ -249,7 +250,7 @@ async function saveProduct() {
 
   try {
     await DB.saveProduct(product);
-    showToast(editingId?'Article modifié ✓':'Article ajouté ✓');
+    showToast(editingId?'Article modifié':'Article ajouté');
     resetForm();
     loadStats();
     loadTable();
@@ -257,7 +258,7 @@ async function saveProduct() {
     showToast('Erreur : '+e.message);
   }
   btn.disabled=false;
-  document.getElementById('saveLbl').textContent = editingId?'Enregistrer →':"Ajouter l'article →";
+  document.getElementById('saveLbl').textContent = editingId?'Enregistrer →':"Ajouter l'article";
 }
 
 async function editProduct(id) {

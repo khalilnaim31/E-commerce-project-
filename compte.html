@@ -82,7 +82,7 @@ function renderPage() {
         ${user.role==='admin'?`<span class="admin-badge">Administrateur</span>`:''}
         <div class="logged-actions">
           <a href="panier.html" class="btn-action btn-outline">🛍 Mon panier</a>
-          ${user.role==='admin'?`<a href="admin.html" class="btn-action btn-outline">⚙️ Interface admin</a>`:''}
+          ${user.role==='admin'?`<a href="admin.html" class="btn-action btn-outline">Interface admin</a>`:''}
           <button class="btn-action btn-danger" onclick="logout()">Se déconnecter</button>
         </div>
       </div>
@@ -102,7 +102,6 @@ function renderPage() {
       <div class="form-group"><label>Mot de passe</label><input type="password" id="lPwd" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
       <div class="error-msg" id="lErr"></div>
       <button class="submit-btn" id="lBtn" onclick="doLogin()">Connexion →</button>
-      <p class="form-note">Compte admin : admin@velour.fr / admin2025</p>
     </div>
     <div id="formReg" style="display:none">
       <h1 class="auth-title"><em>Créer</em> un compte</h1>
@@ -184,7 +183,7 @@ async function loadOrders() {
           <div class="order-total">${Number(o.total).toFixed(2)} €</div>
           <span class="order-statut">${o.statut}</span>
         </div>`).join('');
-  } catch { /* silencieux */ }
+  } catch { }
 }
 
 init();

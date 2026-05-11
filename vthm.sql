@@ -10,9 +10,6 @@ CREATE TABLE utilisateurs (
   role       ENUM('client','admin') NOT NULL DEFAULT 'client',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
-s
-INSERT INTO utilisateurs (nom, email, password, role) VALUES
-('Administrateur', 'admin@vthm.fr', 'admin', 'admin');
 
 DROP TABLE IF EXISTS produits;
 CREATE TABLE produits (

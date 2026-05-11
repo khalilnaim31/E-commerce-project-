@@ -8,18 +8,18 @@ $infos  = [];
 
 try {
     $db = getDB();
-    $infos[] = "✓ Connexion MySQL réussie (host: " . DB_HOST . ", db: " . DB_NAME . ")";
+    $infos[] = "Connexion MySQL réussie (host: " . DB_HOST . ", db: " . DB_NAME . ")";
 } catch (Throwable $e) {
-    $errors[] = "✗ Connexion MySQL impossible : " . $e->getMessage();
+    $errors[] = "Connexion MySQL impossible : " . $e->getMessage();
     goto render;
 }
 
 foreach (['utilisateurs','produits','panier_items','commandes','commande_lignes'] as $t) {
     try {
         $n = $db->query("SELECT COUNT(*) FROM `$t`")->fetchColumn();
-        $infos[] = "✓ Table '$t' : $n ligne(s)";
+        $infos[] = "Table '$t' : $n ligne(s)";
     } catch (Throwable $e) {
-        $errors[] = "✗ Table '$t' introuvable — avez-vous importé vthm.sql ?";
+        $errors[] = "Table '$t' introuvable — avez-vous importé vthm.sql ?";
     }
 }
 
@@ -32,19 +32,19 @@ try {
     if ($affected === 0) {
         $db->prepare("INSERT INTO utilisateurs (nom, email, password, role) VALUES ('Administrateur','admin@vthm.fr',?,'admin')")
            ->execute([$hash]);
-        $infos[] = "✓ Compte admin créé";
+        $infos[] = "Compte admin créé";
     } else {
-        $infos[] = "✓ Hash admin mis à jour";
+        $infos[] = "Hash admin mis à jour";
     }
 
     $row = $db->query("SELECT password FROM utilisateurs WHERE email='admin@vthm.fr'")->fetch();
     if ($row && password_verify('admin2025', $row['password'])) {
-        $infos[] = "✓ Vérification hash : OK — connexion admin fonctionnelle";
+        $infos[] = "Vérification hash : OK - connexion admin fonctionnelle";
     } else {
-        $errors[] = "✗ Vérification hash échouée";
+        $errors[] = "Vérification hash échouée";
     }
 } catch (Throwable $e) {
-    $errors[] = "✗ Erreur mise à jour admin : " . $e->getMessage();
+    $errors[] = "Erreur mise à jour admin : " . $e->getMessage();
 }
 
 render:
@@ -71,7 +71,7 @@ $ok = empty($errors);
 </head>
 <body>
 <div class="box">
-  <h1><?= $ok ? '✓ Setup réussi' : '✗ Erreurs détectées' ?></h1>
+  <h1><?= $ok ? 'Setup réussi' : 'Erreurs détectées' ?></h1>
 
   <?php foreach ($infos as $i): ?>
     <div class="line ok"><?= htmlspecialchars($i) ?></div>
@@ -84,7 +84,7 @@ $ok = empty($errors);
     <div class="creds" style="margin-top:1rem">
     </div>
     <a href="index.html">Aller sur le site →</a>
-    <p class="warn">⚠ Supprimez setup.php une fois terminé !</p>
+    <p class="warn">Supprimez setup.php une fois terminé !</p>
   <?php else: ?>
     <p style="font-size:.7rem;color:#888;margin-top:1rem">Corrigez les erreurs ci-dessus puis rechargez cette page.</p>
   <?php endif; ?>

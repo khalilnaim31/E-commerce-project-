@@ -7,8 +7,6 @@ define('DB_CHARSET', 'utf8mb4');
 
 define('SESSION_LIFETIME', 60 * 60 * 24 * 7);
 
-define('SECRET_KEY', 'velour_secret_2025_changez_moi');
-
 function getDB() {
     static $pdo = null;
     if ($pdo) return $pdo;
@@ -80,6 +78,6 @@ function currentUser() {
 function requireAdmin() {
     $user = currentUser();
     if (!$user || $user['role'] !== 'admin') {
-        jsonError('Accès refusé — administrateur requis.', 403);
+        jsonError('Accès refusé - administrateur requis.', 403);
     }
 }

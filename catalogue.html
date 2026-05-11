@@ -67,8 +67,8 @@ document.getElementById('heroTitle').innerHTML = genre === 'homme'
 if (genre === 'femme') document.documentElement.style.setProperty('--accent','#b08a8a');
 
 const catsDef = genre === 'homme'
-  ? [['','Tout'],['vestes','Vestes & Manteaux'],['chemises','Chemises'],['pantalons','Pantalons'],['pulls','Pulls'],['tops','Tops']]
-  : [['','Tout'],['robes','Robes'],['jupes','Jupes'],['vestes','Vestes & Manteaux'],['pantalons','Pantalons'],['tops','Tops & Chemisiers']];
+  ? [['','Tout'],['vestes','Vestes & Manteaux'],['chemises','Chemises'],['pantalons','Pantalons'],['pulls','Pulls'],['tops','Tops'],['accessoires','Accessoires']]
+  : [['','Tout'],['robes','Robes'],['jupes','Jupes'],['vestes','Vestes & Manteaux'],['pantalons','Pantalons'],['tops','Tops'],['chemisiers','Chemisiers'],['accessoires','Accessoires']];
 
 catsDef.forEach(([k,l]) => {
   const btn = document.createElement('button');
@@ -138,8 +138,8 @@ async function add(id) {
   btn.disabled=true; btn.textContent='…';
   try {
     await DB.addToCart(id, taille);
-    showToast('Article ajouté ✓');
-    btn.textContent='Ajouté ✓';
+    showToast('Article ajouté');
+    btn.textContent='Ajouté';
     setTimeout(()=>{btn.textContent='Ajouter au panier';btn.disabled=false;},2000);
   } catch(e) { showToast('Erreur : '+e.message); btn.textContent='Ajouter au panier'; btn.disabled=false; }
 }
